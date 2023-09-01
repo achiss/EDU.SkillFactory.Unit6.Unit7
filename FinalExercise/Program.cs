@@ -58,7 +58,6 @@ namespace FinalExercise
             City = city;
             Adress = adress;
             this.deliveryCost = deliveryCost;
-
         }
     }
 
@@ -70,45 +69,52 @@ namespace FinalExercise
     class RegisteredCustomer : Customer
     {
         public bool preferDeliveryType;                 // Курьерская доставка (true), самовывоз (false)
-        public DateTime RegistrationDateTime;
+        public DateTime RegistrationDate;
         private int moneySpend;                         // Зависит от суммы потраченной клиентом в магазине
         protected int discountType;
 
-        private void CalculationOfDiscount(in DateTime RegistrationDateTime, in int moneySpend,out int discoutType)
+        protected GetDelivertType()
         {
-            
-            
-            
+            if (preferDeliveryType)
+            {
+                
+            }
+        }
+        
+        protected void CalculationOfDiscount(in DateTime RegistrationDate, in int moneySpend,out int discoutType)
+        {
+            DateTime currentDate = DateTime.Now;
+            if (currentDate.AddYears(1) > RegistrationDate || moneySpend > 10000)
+            {
+                discoutType = 5;
+            }
+            else if (currentDate.AddYears(1) > RegistrationDate && moneySpend > 20000)
+            {
+                discoutType = 10;
+            }
+            else if (currentDate.AddYears(7) > RegistrationDate || moneySpend > 100000)
+            {
+                discoutType = 20;
+            }
+            else
+            {
+                discoutType = 0;
+            }
         }
     }
 
     class Employee: User
     {
         public bool isOnShift;          // Рабочая смена сотрудника
-
-        /*
-        enum Area
-        {
-            None,
-            North,
-            South,
-            East,
-            West
-        }
-
-        enum Role
-        {
-            Logistician,
-            Courier,
-            OfficeManager,
-            OfficeWorker
-        }
-        */
-
-        public Employee(string id, string name, string surname, string email, bool isOnShift) : base(id, name, surname,
-            email)
+        public string Location;
+        public string Role;
+        
+        public Employee(string id, string name, string surname, string email, bool isOnShift, string location, 
+            string role) : base(id, name, surname, email)
         {
             this.isOnShift = isOnShift;
+            Location = location;
+            Role = role;
         }
     }
 }
