@@ -49,13 +49,16 @@ namespace FinalExercise
         public string Phone;             // Заполнятся вручную
         public string City;              // Заполнятся вручную
         public string Adress;            // Заполнятся вручную
+        public int deliveryCost;
         
-        public Customer(string id, string name, string surname, string email, string phone, string city, string adress) 
-            : base(id, name, surname, email)
+        public Customer(string id, string name, string surname, string email, string phone, string city, string adress,
+            int deliveryCost) : base(id, name, surname, email)
         {
             Phone = phone;
             City = city;
             Adress = adress;
+            this.deliveryCost = deliveryCost;
+
         }
     }
 
@@ -66,12 +69,22 @@ namespace FinalExercise
 
     class RegisteredCustomer : Customer
     {
-        
+        public bool preferDeliveryType;                 // Курьерская доставка (true), самовывоз (false)
+        public DateTime RegistrationDateTime;
+        private int moneySpend;                         // Зависит от суммы потраченной клиентом в магазине
+        protected int discountType;
+
+        private void CalculationOfDiscount(in DateTime RegistrationDateTime, in int moneySpend,out int discoutType)
+        {
+            
+            
+            
+        }
     }
 
     class Employee: User
     {
-        public bool isOnShift;          // Работает ли сотрудник
+        public bool isOnShift;          // Рабочая смена сотрудника
 
         /*
         enum Area
@@ -95,7 +108,7 @@ namespace FinalExercise
         public Employee(string id, string name, string surname, string email, bool isOnShift) : base(id, name, surname,
             email)
         {
-            isOnShift = isOnShift;
+            this.isOnShift = isOnShift;
         }
     }
 }
