@@ -1,6 +1,36 @@
 ﻿
 namespace FinalExercise                         //
 {
+    abstract class Customer
+    {
+        public string Name;
+        public string Surname;
+        public int Age;
+        public string Email;
+        
+        enum DiscontType            // Выбираем шаг скидки
+        {
+            None = 0,
+            TenPercent,
+            FifteenPercent
+        }
+
+        enum DeliveryType           // Задаем тип доставки
+        {
+            None,
+            Pickup,
+            shopDelivery,
+            homeDelivery
+        }
+    }
+
+    class RegisteredCustomer: Customer
+    {
+        public string phoneNumber;
+        protected string homeAddress;
+        protected decimal moneySpend;
+        protected string registrationDate;
+    }
     
     abstract class Delivery 
     {
@@ -27,7 +57,7 @@ namespace FinalExercise                         //
     {
         public TDelivery Delivery;
 
-        public int Number;
+        public int orderNumber;
 
         public string Description;
 
