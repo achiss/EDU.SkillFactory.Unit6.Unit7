@@ -1,7 +1,7 @@
 ﻿
 namespace FinalExercise
 {
-    
+
     /*
     Абстрактный класс "Person".
     На его основе описываются все пользователи системы.
@@ -12,7 +12,7 @@ namespace FinalExercise
      */
     abstract class Person
     {
-        public bool isPersonType;                       // true -> customer
+        public bool isPersonType; // true -> customer
         public string Name { get; set; }
         public string Surname { get; set; }
         public string Phone { get; set; }
@@ -28,12 +28,13 @@ namespace FinalExercise
 
     class Employee : Person
     {
-        public bool isOnShift;                          // true -> on a work
+        public bool isOnShift; // true -> on a work
         public string Role { get; set; }
         public string Location { get; set; }
         public string Email { get; set; }
 
-        public Employee(bool isPersonType, string name, string surname, string phone, bool isOnShift, string role, string location, string email) :
+        public Employee(bool isPersonType, string name, string surname, string phone, bool isOnShift, string role,
+            string location, string email) :
             base(isPersonType, name, surname, phone)
         {
             this.isOnShift = isOnShift;
@@ -45,7 +46,7 @@ namespace FinalExercise
 
     abstract class Customer : Person
     {
-        public bool isFormalizedCustomer;
+        public bool isFormalizedCustomer; // true -> Registrered Customer
         public string ID { get; }
         public string Adress { get; set; }
 
@@ -56,18 +57,19 @@ namespace FinalExercise
             ID = id;
             Adress = adress;
         }
-        
+
         public abstract void GenerateID(in bool isFormalizedCustomer, out string ID);
     }
 
     class UnregisteredCustomer : Customer
     {
-        public UnregisteredCustomer(bool isPersonType, string name, string surname, string phone, bool isFormalizedCustomer,
+        public UnregisteredCustomer(bool isPersonType, string name, string surname, string phone,
+            bool isFormalizedCustomer,
             string id, string adress) : base(isPersonType, name, surname, phone, isFormalizedCustomer, id, adress)
         {
-            
+
         }
-        
+
         public override void GenerateID(in bool isFormalizedCustomer, out string ID)
         {
             Random value = new Random();
@@ -82,18 +84,24 @@ namespace FinalExercise
     class RegisteredCustomer : Customer
     {
         public string Email;
-        public bool isStandartDelivery;
-        public decimal MoneySpend;
-        public DateTime RegistrationDate;
+        public bool isStandartDelivery; // Так как пользователь зарегистрирован, есть возможность купить в 1 клик.
+        public decimal MoneySpend; // Расчёт скидки на товары
+        public DateTime RegistrationDate; // Расчёт скидки на товары
 
-        public RegisteredCustomer(bool isPersonType, string name, string surname, string phone, bool isFormalizedCustomer,
-            string id, string adress, string email, bool isStandartDelivery,decimal moneyspend, DateTime registrationdate) : 
+        public (string cardHolderName, string cardHolderSurname, string cardNumber, DateTime expirationDateCard)
+            CardData;
+
+        public RegisteredCustomer(bool isPersonType, string name, string surname, string phone,
+            bool isFormalizedCustomer,
+            string id, string adress, string email, bool isStandartDelivery, decimal moneyspend,
+            DateTime registrationdate) :
             base(isPersonType, name, surname, phone, isFormalizedCustomer, id, adress)
         {
             Email = email;
             this.isStandartDelivery = isStandartDelivery;
             MoneySpend = moneyspend;
             RegistrationDate = registrationdate;
+
         }
 
         public override void GenerateID(in bool isFormalizedCustomer, out string ID)
@@ -123,10 +131,76 @@ namespace FinalExercise
         }
     }
 
+    /*
+     Абстратктный класс Items. Является оснвоным для классов Food и Equipment.
+     Food. Имеются ограничения на доставку. Может быть или в магазин или курьерская доставка.
+     Equipment.
+     */
     abstract class Items
     {
         public string Product;
-        public string Label;
-        public string 
+        public string productLabel;
+        public string productDecription;
+        public string productNotes;
+        public decimal productPrice;
+        public int productCount;
+    }
+
+    class Food : Items
+    {
+
+    }
+
+    class Equipment : Items
+    {
+
+    }
+
+    /*
+     Абстратктный класс Distribution.
+     */
+    abstract class Distribution
+    {
+
+    }
+
+    /*
+     Абстратктный класс Delivery.
+     */
+    abstract class Delivery
+    {
+        public string Address;
+    }
+
+    class HomeDelivery : Delivery
+    {
+        /* ... */
+    }
+
+    class PickPointDelivery : Delivery
+    {
+        /* ... */
+    }
+
+    class ShopDelivery : Delivery
+    {
+        /* ... */
+    }
+
+    class Order<TDelivery,
+        TStruct> where TDelivery : Delivery
+    {
+        public TDelivery Delivery;
+
+        public int Number;
+
+        public string Description;
+
+        public void DisplayAddress()
+        {
+            Console.WriteLine(Delivery.Address);
+        }
+
+        // ... Другие поля
     }
 }
