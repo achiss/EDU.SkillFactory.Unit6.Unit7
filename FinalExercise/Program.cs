@@ -1,120 +1,132 @@
 ﻿
-namespace FinalExercise                        
+namespace FinalExercise
 {
+    
     /*
-    Абстрактный класс "User". 
+    Абстрактный класс "Person".
     На его основе описываются все пользователи системы.
     Сотрудник "Employee" (только сотрудники отдела доставки);
-    Покупатель "Customer":
-       - незарегистрированный покупатель ;
-       - зарегистрированный покупатель.
-       
-    П.С. поле "пароль" опущено!  
-    */
-    abstract class User
+    Покупатель "Customer" (второй абстрактный класс блока):
+       - незарегистрированный покупатель (UnregisteredCustomer);
+       - зарегистрированный покупатель (RegisteredCustomer).
+     */
+    abstract class Person
     {
-        protected bool isUserType;      // Если правда то покупатель, в противном случае сотрудник
-        public string ID;
-        public string Name;             // Заполнятся вручную
-        public string Surname;          // Заполнятся вручную
-        public string Email;            // Заполнятся вручную
+        public bool isPersonType;                       // true -> customer
+        public string Name { get; set; }
+        public string Surname { get; set; }
+        public string Phone { get; set; }
 
-        public User(string id, string name, string surname, string email)
+        public Person(bool isPersonType, string name, string surname, string phone)
         {
-            ID = id;
+            this.isPersonType = isPersonType;
             Name = name;
             Surname = surname;
-            Email = email;
-        }
-
-        public void GenerateIdentificationNumber(in bool isUserType, out string ID)
-        {
-            Random value = new Random();
-            int number = value.Next(000001, 999999);
-            if (isUserType)
-            {
-                string userType = "Customer_";
-                ID = string.Format("{0}{1}", userType, number.ToString());
-            }
-            else
-            {
-                string userType = "Employee_";
-                ID = string.Format("{0}{1}", userType, number.ToString());
-            }
+            Phone = phone;
         }
     }
 
-    class Customer : User
+    class Employee : Person
     {
-        public string Phone;             // Заполнятся вручную
-        public string City;              // Заполнятся вручную
-        public string Adress;            // Заполнятся вручную
-        public int deliveryCost;
-        
-        public Customer(string id, string name, string surname, string email, string phone, string city, string adress,
-            int deliveryCost) : base(id, name, surname, email)
+        public bool isOnShift;                          // true -> on a work
+        public string Role { get; set; }
+        public string Location { get; set; }
+        public string Email { get; set; }
+
+        public Employee(bool isPersonType, string name, string surname, string phone, bool isOnShift, string role, string location, string email) :
+            base(isPersonType, name, surname, phone)
         {
-            Phone = phone;
-            City = city;
-            Adress = adress;
-            this.deliveryCost = deliveryCost;
+            this.isOnShift = isOnShift;
+            Role = role;
+            Location = location;
+            Email = email;
         }
+    }
+
+    abstract class Customer : Person
+    {
+        public bool isFormalizedCustomer;
+        public string ID { get; }
+        public string Adress { get; set; }
+
+        public Customer(bool isPersonType, string name, string surname, string phone, bool isFormalizedCustomer,
+            string id, string adress) : base(isPersonType, name, surname, phone)
+        {
+            this.isFormalizedCustomer = isFormalizedCustomer;
+            ID = id;
+            Adress = adress;
+        }
+        
+        public abstract void GenerateID(in bool isFormalizedCustomer, out string ID);
     }
 
     class UnregisteredCustomer : Customer
     {
+        public UnregisteredCustomer(bool isPersonType, string name, string surname, string phone, bool isFormalizedCustomer,
+            string id, string adress) : base(isPersonType, name, surname, phone, isFormalizedCustomer, id, adress)
+        {
+            
+        }
         
+        public override void GenerateID(in bool isFormalizedCustomer, out string ID)
+        {
+            Random value = new Random();
+            int number = value.Next(000001, 999999);
+            {
+                string userType = "UnregCustomer_";
+                ID = string.Format("{0}{1}", userType, number.ToString());
+            }
+        }
     }
 
     class RegisteredCustomer : Customer
     {
-        public bool preferDeliveryType;                 // Курьерская доставка (true), самовывоз (false)
+        public string Email;
+        public bool isStandartDelivery;
+        public decimal MoneySpend;
         public DateTime RegistrationDate;
-        private int moneySpend;                         // Зависит от суммы потраченной клиентом в магазине
-        protected int discountType;
 
-        protected GetDelivertType()
+        public RegisteredCustomer(bool isPersonType, string name, string surname, string phone, bool isFormalizedCustomer,
+            string id, string adress, string email, bool isStandartDelivery,decimal moneyspend, DateTime registrationdate) : 
+            base(isPersonType, name, surname, phone, isFormalizedCustomer, id, adress)
         {
-            if (preferDeliveryType)
-            {
-                
-            }
+            Email = email;
+            this.isStandartDelivery = isStandartDelivery;
+            MoneySpend = moneyspend;
+            RegistrationDate = registrationdate;
         }
-        
-        protected void CalculationOfDiscount(in DateTime RegistrationDate, in int moneySpend,out int discoutType)
+
+        public override void GenerateID(in bool isFormalizedCustomer, out string ID)
+        {
+            // написать метод
+        }
+
+        protected int DiscountCalculation(in DateTime registrationdate, in decimal moneyspend)
         {
             DateTime currentDate = DateTime.Now;
-            if (currentDate.AddYears(1) > RegistrationDate || moneySpend > 10000)
+            if (currentDate.AddYears(1) > registrationdate || moneyspend > 10000)
             {
-                discoutType = 5;
+                return 5;
             }
-            else if (currentDate.AddYears(1) > RegistrationDate && moneySpend > 20000)
+            else if (currentDate.AddYears(1) > registrationdate && moneyspend > 20000)
             {
-                discoutType = 10;
+                return 10;
             }
-            else if (currentDate.AddYears(7) > RegistrationDate || moneySpend > 100000)
+            else if (currentDate.AddYears(7) > registrationdate || moneyspend > 100000)
             {
-                discoutType = 20;
+                return 20;
             }
             else
             {
-                discoutType = 0;
+                return 0;
             }
         }
     }
 
-    class Employee: User
+    abstract class Items
     {
-        public bool isOnShift;          // Рабочая смена сотрудника
-        public string Location;
-        public string Role;
-        
-        public Employee(string id, string name, string surname, string email, bool isOnShift, string location, 
-            string role) : base(id, name, surname, email)
-        {
-            this.isOnShift = isOnShift;
-            Location = location;
-            Role = role;
-        }
+        public string Product;
+        public string Label;
+        public string 
     }
 }
