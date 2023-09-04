@@ -16,8 +16,8 @@ namespace FinalExercise
             Phone = phone;
         }
 
-        public void GreetingPerson() => Console.WriteLine(Name);
-        public void ShowCity() => Console.WriteLine(City);
+        public virtual void GreetingPerson() => Console.WriteLine(Name);
+        public abstract void ShowCity();
     }
 
     class Identification                            // !!!
@@ -63,7 +63,7 @@ namespace FinalExercise
             Email = email;
         }
         
-        
+        private override void GreetingPerson() => Console.WriteLine(Name, employeeSurname);
     }
 
     abstract class Customer : Person
