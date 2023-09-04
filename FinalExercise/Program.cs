@@ -7,7 +7,7 @@ namespace FinalExercise
     {
         public abstract string Name { get; set; }
         public string City;
-        public string Phone;
+        public abstract string Phone { get; set; }
 
         public Person(string name, string city, string phone)
         {
@@ -19,27 +19,14 @@ namespace FinalExercise
         public virtual void GreetingPerson() => Console.WriteLine(Name);
         public abstract void ShowCity();
     }
-
-    class Identification                            // !!!
-    {
-        public int Number;
-        public string prefixNumber;
-        public string networkNumber;
-    }
     
-    class Employee : Person
+    class Employee<T> : Person
     {
         private string employeeName;
         public override string Name
         {
-            get
-            {
-                return employeeName;
-            }
-            set
-            {
-                employeeName = value;
-            }
+            get { return employeeName; }
+            set { employeeName = value; }
         }
         public bool isOnShift;
         public enum Role
@@ -48,10 +35,10 @@ namespace FinalExercise
             Advisor,
             Deliveryman
         }
-        protected object fieldID;
+        protected T fieldID;
         protected string employeeSurname { get; set; }
         public string cityArea;
-        public string Email;
+        protected string Email;
 
         protected Employee(object fieldID, string name, string surname, bool isOnShift, string email, string city, string phone) :
             base(name, city, phone)
@@ -64,14 +51,35 @@ namespace FinalExercise
         }
         
         private override void GreetingPerson() => Console.WriteLine(Name, employeeSurname);
+        public override void ShowCity() => Console.WriteLine(City, cityArea);
     }
 
     abstract class Customer : Person
     {
+        protected string customerName;
+        public override string Name
+        {
+            get { return customerName; }
+            set { customerName = value; }
+        }
+        protected string customerSurname;
+        protected string customerPhone;
+        public override string Phone
+        {
+            get { return customerPhone; }
+            set { customerPhone = value; }
+        }
+
+        protected Customer(string name, string surname, string phone) :
+            base(name, city, phone)
+        {
+            customerSurname = surname;
+        }
         
+        public abstract int this [int index] { get; set; }
     }
 
-    class RegisteredCustomer : Customer
+    class RegisteredCustomer<T1, T2> : Customer
     {
         
     }
