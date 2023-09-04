@@ -5,11 +5,64 @@ namespace FinalExercise
     //
     abstract class Person
     {
-        
+        public abstract string Name { get; set; }
+        public string City;
+        public string Phone;
+
+        public Person(string name, string city, string phone)
+        {
+            Name = name;
+            City = city;
+            Phone = phone;
+        }
+
+        public void GreetingPerson() => Console.WriteLine(Name);
+        public void ShowCity() => Console.WriteLine(City);
     }
 
+    class Identification                            // !!!
+    {
+        public int Number;
+        public string prefixNumber;
+        public string networkNumber;
+    }
+    
     class Employee : Person
     {
+        private string employeeName;
+        public override string Name
+        {
+            get
+            {
+                return employeeName;
+            }
+            set
+            {
+                employeeName = value;
+            }
+        }
+        public bool isOnShift;
+        public enum Role
+        {
+            Officemanager,
+            Advisor,
+            Deliveryman
+        }
+        protected object fieldID;
+        protected string employeeSurname { get; set; }
+        public string cityArea;
+        public string Email;
+
+        protected Employee(object fieldID, string name, string surname, bool isOnShift, string email, string city, string phone) :
+            base(name, city, phone)
+        {
+            this.fieldID = fieldID;
+            employeeName = name;
+            employeeSurname = surname;
+            this.isOnShift = isOnShift;
+            Email = email;
+        }
+        
         
     }
 
