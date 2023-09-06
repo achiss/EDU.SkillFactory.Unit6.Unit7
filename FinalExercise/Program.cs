@@ -1,65 +1,67 @@
-﻿namespace FinalExercise
+﻿
+namespace FinalExercise
 {
+
+    // Customers and employees.
+    // Base class to other from this part.
     abstract class Person
     {
-        private string Name { get; set; }
-
-        public string Phone
+        private string personName { get; set; }
+        private byte personAge
         {
             get
             {
-                return Phone;
+                return personAge;
             }
             set
             {
-
-                if ((Phone.Length != 11) && (Phone.Contains("7")))
+                if (personAge > 0)
                 {
-                    Phone = value;
+                    personAge = value;
                 }
             }
         }
-        public string City { get; set; }
-        public byte Age
+        private string personEmail { get; set; }
+        private string chosenCity { get; set; }
+
+        private Person(string name, byte age, string email, string city)
         {
-            get
-            {
-                return Age;
-            }
-            set
-            {
-                if (Age > 0)
-                {
-                    Age = value;
-                }
-            }
+            personName = name;          // 7.1 Ключевые слова this и base
+            personAge = age;            // используется this.
+            personEmail = email;        // ->
+            chosenCity = city;          // В текущей версии изменили или ...?
         }
 
-        protected Person(string name, byte age, string phone, string city)
-        {
-            Name = name;
-            Phone = phone;
-            Age = age;
-            City = city;
-        }
-
-        public void Greetings() => Console.WriteLine($"Hello {Name}");
-        public abstract void ShowCity();
+        protected abstract void Greetings();
+        protected abstract void CheckCity();
     }
 
-    class Employee : Person
+    // Based on class PERSON, and it's based for RegistredCustomer and Unregistread custmer.
+    abstract class Customer : Person
     {
-        protected string employeeName;
-        public string name
-        {
-            get { return employeeName; }
-            set { employeeName = value; }
-        }
-
-        private Employee() :
-            base(name, age, phone, city)
-        {
-            
-        }
+        private decimal customerID { get; set; }
+        private string customerSurname { get; set; }
+        private string customerPhone { get; set; }
+        private string customerAdress { get; set; }
+        private bool isCustomerRegistered { get; set; }
+    }
+    
+    // Types of goods.
+    // Base class to other from this part.
+    abstract class Goods
+    {
+        
+    }
+    
+    // 
+    abstract class ShoppingCar
+    {
+        
+    }
+    
+    // 
+    abstract class Logistics
+    {
+        
     }
 }
