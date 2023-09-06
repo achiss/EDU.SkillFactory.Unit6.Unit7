@@ -2,7 +2,7 @@
 namespace FinalExercise
 {
 
-    // Customers and employees.
+    // Customers and employees (2 abstract classes Person, Customer)
     // Base class to other from this part.
     abstract class Person
     {
@@ -28,12 +28,12 @@ namespace FinalExercise
         protected Person(string name, byte age, string email, string city)
         {
             personName = name;          // 7.1 Ключевые слова this и base
-            personAge = age;            // используется this.
+            personAge = age;            // в левой части используется this.
             personEmail = email;        // ->
             chosenCity = city;          // В текущей версии изменили или ...?
         }
 
-        protected abstract void Greetings();
+        protected abstract void Greetings(string name);
         protected abstract void CheckCity();
     }
 
@@ -59,7 +59,7 @@ namespace FinalExercise
         }
 
         protected Customer(long id, string name, string surname, byte age, string phone, string email, string city,
-            string address, decimal expensis,bool isRegistered) : base(name, age, email, city)
+            string address, decimal expensis, bool isRegistered) : base(name, age, email, city)
         {
             customerSurname = surname;
             customerPhone = phone;
@@ -68,13 +68,10 @@ namespace FinalExercise
             isCustomerRegistered = isRegistered;
             customerExpensise = expensis;
         }
-        
-        protected new byte personAge                        
+
+        protected new byte personAge
         {
-            get
-            {
-                return base.personAge;
-            }
+            get { return base.personAge; }
             set
             {
                 if (value > 14)
@@ -84,16 +81,26 @@ namespace FinalExercise
             }
         }
 
+
+        protected override void Greetings(string name) => Console.WriteLine($"Hello {name}");
         protected void GenerateIdentificationNumbers(out long id)
         {
-            
-        }
+            int idLength = 18;
+            Random randomID = new Random();
+            string stringID = "";
 
+            for (int i = 0; i < idLength; i++)
+            {
+                stringID += randomID.Next(0, 9);
+            }
+
+            id = long.Parse(stringID);
+        }
         protected decimal DiscountCalculate(in bool isCustomerRegistered, in decimal customerExpensise)
         {
+            decimal discount = 0;
             if (isCustomerRegistered)
             {
-                decimal discount = 0;
                 switch (customerExpensise)
                 {
                     case decimal expensise when expensise >= 5000 && expensise < 20000:
@@ -105,14 +112,54 @@ namespace FinalExercise
                     default:
                         break;
                 }
+
                 return discount;
             }
             else
             {
                 Console.WriteLine("Customer is not registered!");
+                return discount;
             }
         }
+    }
     
+    // Class EMPLOYEE based on person
+    class Employee : Person
+    {
+        private long employeeID { get; set; }
+        private string employeeSurname { get; set; }
+        public bool isOnShift { get; set; }
+        public string Role { get; set; }
+        private string localArea { get; set; }
+        private string emloyeePhone { get; set; }
+
+        protected Employee(long id, bool isShift, string name, string role, string surname, byte age, string phone, 
+            string email, string city, string area) : base(name, age, email, city)
+        {
+            employeeID = id;
+            isOnShift = isShift;
+            Role = role;
+            employeeSurname = surname;
+            emloyeePhone = phone;
+            localArea = area;
+        }
+        
+        protected new byte age
+        {
+            get { return base.personAge; }
+            set
+            {
+                if (value > 18)
+                {
+                    base.personAge = value;
+                }
+            }
+        }
+        
+        
+        
+    }
+
     // Types of goods.
     // Base class to other from this part.
     abstract class Goods
