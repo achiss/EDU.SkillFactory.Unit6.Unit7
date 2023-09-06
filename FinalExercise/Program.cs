@@ -155,9 +155,16 @@ namespace FinalExercise
                 }
             }
         }
-        
-        
-        
+
+        protected override void Greetings(string name)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override void CheckCity()
+        {
+            throw new NotImplementedException();
+        }
     }
 
     // Types of goods.
