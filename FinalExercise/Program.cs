@@ -360,6 +360,19 @@ namespace FinalExercise
     //      - OtherFood- ограничений на доставку нет.
 
     //
+    static class Order
+    {
+        public static int DiscountData;
+        public static void GetDicountData(out int DiscountData)
+        {
+            RegesteredCustomer method = new DiscountCalculation();  // для передачи поля(метода) используется текущая конструкция
+            DiscountData = method.DiscountCalculation();            // как реально она применяется?
+        }
+        public static string ProductName;
+        
+    }
+    
+    //
     abstract class Delivery
     {
         public string ProductNameToDelivery { get; set; }
@@ -373,9 +386,14 @@ namespace FinalExercise
         }
     }
 
-    class HomeDelivery: Delivery 
+    class HomeDelivery
     {
-        
+        private Delivery _delivery;
+
+        public HomeDelivery()
+        {
+            _delivery = new Delivery();
+        }
     }
 
     class ExpressDelicery : Delivery
