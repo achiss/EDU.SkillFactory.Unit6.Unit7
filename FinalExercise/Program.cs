@@ -1,188 +1,241 @@
-﻿
+
+//
+
+using System.ComponentModel.DataAnnotations;
+
 namespace FinalExercise
 {
-
-    // Customers and employees (2 abstract classes Person, Customer)
-    // Base class to other from this part.
+    /*
+     * 
+    */
+    // Основной абстрактный класс пользователя (Person)
     abstract class Person
     {
-        private string personName { get; set; }
-        private byte _personAge;                        // 
-        protected byte personAge                        //
+        // Поля класса
+        protected internal string Name { get; set; }
+
+        protected internal string Phone
         {
             get
             {
-                return _personAge;
+                return Phone;
+            }
+            set
+            {
+                if (value.Contains("+7"))
+                {
+                    Phone = value;
+                }
+            }
+            
+        }
+
+        protected int Age
+        {
+            get
+            {
+                return Age;
             }
             set
             {
                 if (value > 0)
                 {
-                    _personAge = value;
-                }
-            }
-        }
-        private string personEmail { get; set; }
-        private string chosenCity { get; set; }
-
-        protected Person(string name, byte age, string email, string city)
-        {
-            personName = name;          // 7.1 Ключевые слова this и base
-            personAge = age;            // в левой части используется this.
-            personEmail = email;        // ->
-            chosenCity = city;          // В текущей версии изменили или ...?
-        }
-
-        protected abstract void Greetings(string name);
-        protected abstract void CheckCity();
-    }
-
-    // Based on class PERSON, and it's based for RegistredCustomer and Unregistread custmer.
-    abstract class Customer : Person
-    {
-        private long customerID { get; set; }
-        private string customerSurname { get; set; }
-        private string customerPhone { get; set; }
-        private string customerAddress { get; set; }
-        private bool isCustomerRegistered { get; set; }
-
-        private decimal customerExpensise
-        {
-            get { return customerExpensise; }
-            set
-            {
-                if (value > 0)
-                {
-                    customerExpensise = value;
+                    Age = value;
                 }
             }
         }
 
-        protected Customer(long id, string name, string surname, byte age, string phone, string email, string city,
-            string address, decimal expensis, bool isRegistered) : base(name, age, email, city)
+        // Конструктор класса
+        public Person(string name, string phone, int age)
         {
-            customerSurname = surname;
-            customerPhone = phone;
-            customerAddress = address;
-            customerID = id;
-            isCustomerRegistered = isRegistered;
-            customerExpensise = expensis;
+            Name = name;
+            Phone = phone;
+            Age = age;
         }
 
-        protected new byte personAge
-        {
-            get { return base.personAge; }
-            set
-            {
-                if (value > 14)
-                {
-                    base.personAge = value;
-                }
-            }
-        }
-
-
-        protected override void Greetings(string name) => Console.WriteLine($"Hello {name}");
-        protected void GenerateIdentificationNumbers(out long id)
-        {
-            int idLength = 18;
-            Random randomID = new Random();
-            string stringID = "";
-
-            for (int i = 0; i < idLength; i++)
-            {
-                stringID += randomID.Next(0, 9);
-            }
-
-            id = long.Parse(stringID);
-        }
-        protected decimal DiscountCalculate(in bool isCustomerRegistered, in decimal customerExpensise)
-        {
-            decimal discount = 0;
-            if (isCustomerRegistered)
-            {
-                switch (customerExpensise)
-                {
-                    case decimal expensise when expensise >= 5000 && expensise < 20000:
-                        discount = 0.03m;
-                        break;
-                    case decimal expensise when expensise >= 20000 && expensise < 50000:
-                        discount = 0.05m;
-                        break;
-                    default:
-                        break;
-                }
-
-                return discount;
-            }
-            else
-            {
-                Console.WriteLine("Customer is not registered!");
-                return discount;
-            }
-        }
+        // Методы класса
+        public abstract void Greeting();
+        public abstract void ShowRole();
     }
     
-    // Class EMPLOYEE based on person
+    // Класс сотрудник, дочерний класс от PERSON
     class Employee : Person
     {
-        private long employeeID { get; set; }
-        private string employeeSurname { get; set; }
-        public bool isOnShift { get; set; }
-        public string Role { get; set; }
-        private string localArea { get; set; }
-        private string emloyeePhone { get; set; }
-
-        protected Employee(long id, bool isShift, string name, string role, string surname, byte age, string phone, 
-            string email, string city, string area) : base(name, age, email, city)
+        // Поля класса
+        protected int _age;
+        protected int Age
         {
-            employeeID = id;
-            isOnShift = isShift;
-            Role = role;
-            employeeSurname = surname;
-            emloyeePhone = phone;
-            localArea = area;
-        }
-        
-        protected new byte age
-        {
-            get { return base.personAge; }
+            get { return _age; }
             set
             {
                 if (value > 18)
                 {
-                    base.personAge = value;
+                    _age = value;
                 }
             }
         }
-
-        protected override void Greetings(string name)
+        private string Surname { get; set; }
+        protected internal string ID { get; set; }
+        private string Email { get; set; }
+        private string Position { get; set; }
+        protected internal string City { get; set; }
+        
+        // Конструктор класса
+        public Employee(string id, string name, string surname, int age, string position, string phone, string email, 
+            string city) : base(name, phone, age)
         {
-            throw new NotImplementedException();
+            ID = id;
+            Surname = surname;
+            Position = position;
+            Email = email;
+            City = city;
         }
 
-        protected override void CheckCity()
+        // Методы класса
+        public override void Greeting() => Console.WriteLine($"Hello: {Surname} {Name}, ID: {ID}");
+        public override void ShowRole() => Console.WriteLine($"Your postition is {Position}");
+        private static string GenerateID(){}        // Генерирования случайного 9 значного числа в качестве ID
+        private static bool CheckLocation(){}       // Проверка, офис находится в городе в котором оформлена доставка
+    }
+    
+    // Создание базового класса для покупателей, на основе класса PERSON
+    abstract class Customer : Person
+    {
+        // Поля класса
+        protected int _age;
+        protected int Age
         {
-            throw new NotImplementedException();
+            get { return _age; }
+            set
+            {
+                if (value > 16)
+                {
+                    _age = value;
+                }
+            }
+        }
+        protected string ID { get; set; }
+        protected bool CustomerType { get; set; }
+
+        // Конструктор класса
+        public Customer(string id, string name, string phone, int age, bool customerType) : base(name, phone, age)
+        {
+            ID = id;
+            CustomerType = customerType;
+        }
+        
+        // Методы класса
+        public override void Greeting() => Console.WriteLine($"{Name}");
+
+        public override void ShowRole()
+        {
+            if (CustomerType)
+            {
+                Console.WriteLine($"User {ID} is registered");
+            }
+            else
+            {
+                Console.WriteLine($"{Name} you dont have a discount");
+            }
         }
     }
+    
+    // Классы покупателей
+    class UnregesteredCustomer : Customer
+    {
+        // Поля класса
+        protected internal bool isDelivery { get; set; }  // true доставка только в магазин, false отсутствует доставка
+        protected internal string Area { get; set; }
+        public UnregesteredCustomer(string id, string name, string phone, int age, string area, bool customerType, 
+            bool isdelivery) : base(id, name, phone, age, customerType)
+        {
+            Area = area;        // район получения заказа
+            isDelivery = isdelivery;
+        }
 
-    // Types of goods.
-    // Base class to other from this part.
-    abstract class Goods
+        // Методы класса
+        public void Greeting() => Console.WriteLine($"{Name}");
+        public new void ShowRole() => 
+            Console.WriteLine($"{Name} you are nor registered customer. We cant apply discount for you");
+        public string GenerateID() {}
+        public int GenerateDiscountCoupon()
+        {
+            decimal Discount = 0;
+            switch (Price)
+            {
+                case int price when price >= 10000 && price < 20000:
+                    return 3;
+                    break;
+                case int price when price >= 20000 && price < 25000:
+                    return 5;
+                    break;
+                default:
+                    return 0;
+            }
+        }
+        public string GenerateCodeCoupon()
+        {
+            int couponLength = 18;
+            Random randomChar = new Random();
+            string stringCoupon = "";
+
+            for (int i = 0; i < couponLength; i++)
+            {
+                stringCoupon += randomChar.Next(0, 9);
+            }
+
+            return stringCoupon;
+        } 
+        public void ShowCoupon()
+        {
+            var discountValue = GenerateDiscountCoupon();
+            var discountName = GenerateCodeCoupon();
+            
+            Console.WriteLine($"You discount is {discountValue}. {discountName}");
+        }
+    }  // !!! ДОБАВИТЬ ССЫЛКУ ЦЕНУ ТОВАРА
+
+    class RegesteredCustomer : Customer
     {
+        // Поля класса
+        protected internal string Surname { get; set; }
+        protected internal string Email { get; set; }
+        protected internal int Discount { get; set; }
+        protected decimal SpendMoney { get; set; }
+        protected internal string Address { get; set; }
         
-    }
-    
-    // 
-    abstract class ShoppingCar
-    {
+        // Конструктор класса
+        public RegesteredCustomer(string id, string name, string surname, int age, string phone, string email, 
+            string address, int discount, decimal spendMoney, bool customerType) :
+            base(id, name, phone, age, customerType)
+        {
+            Surname = surname;
+            Email = email;
+            SpendMoney = spendMoney;
+            Address = address;
+        }
         
-    }
-    
-    // 
-    abstract class Logistics
-    {
-        
+        // Методы класса
+        public new void Greeting() => Console.WriteLine($"{Surname} {Name} {ID}");
+
+        protected internal int DiscountCalculation()
+        {
+            if (SpendMoney > 0)
+            {
+                switch (SpendMoney)
+                {
+                    case decimal spendMoney when spendMoney >= 20000 && spendMoney < 35000:
+                        return 5;
+                        break;
+                    case decimal spendMoney when spendMoney >= 35000 && spendMoney < 50000:
+                        return 10;
+                        break;
+                    default:
+                        return 1;
+                }
+            }
+
+            return 0;
+        }
     }
 }
