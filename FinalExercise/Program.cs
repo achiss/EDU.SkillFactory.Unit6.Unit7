@@ -160,13 +160,13 @@ namespace FinalExercise
         public string GenerateID() {}
         public int GenerateDiscountCoupon()
         {
-            decimal Discount = 0;
+            int Discount = 0;
             switch (Price)
             {
-                case int price when price >= 10000 && price < 20000:
+                case double price when price >= 10000 && price < 20000:
                     return 3;
                     break;
-                case int price when price >= 20000 && price < 25000:
+                case double price when price >= 20000 && price < 25000:
                     return 5;
                     break;
                 default:
@@ -197,7 +197,7 @@ namespace FinalExercise
 
     class RegesteredCustomer : Customer
     {
-        // Поля класса
+        // Поля класса, часть полей используются в других классах
         protected internal string Surname { get; set; }
         protected internal string Email { get; set; }
         protected internal int Discount { get; set; }
@@ -213,6 +213,7 @@ namespace FinalExercise
             Email = email;
             SpendMoney = spendMoney;
             Address = address;
+            Discount = discount;
         }
         
         // Методы класса
@@ -237,5 +238,175 @@ namespace FinalExercise
 
             return 0;
         }
+    }
+    
+    /*
+     * 
+    */
+    // Абстрактный класс продукта (Product)
+    abstract class Product
+    {
+        // Поля класса 
+        protected internal string ProductName { set; get; }
+        protected string ProductDescription { set; get; }
+        protected internal string ProductLabel { set; get; }
+        protected internal double ProductPrice 
+        {
+            get { return ProductPrice; }
+            set
+            {
+                if (value > 0)
+                {
+                    ProductPrice = value;
+                }
+            }
+        }
+        protected string[] StorageLocation { get; set; }
+        
+        //
+        public Product(string name, string description, string label, double price, string[] storageLocation)
+        {
+            ProductName = name;
+            ProductDescription = description;
+            ProductLabel = label;
+            ProductPrice = price;
+            StorageLocation = storageLocation;
+        }
+        
+        //
+        public abstract void ShowProductData();
+        public abstract void InitializeStorageLocationList();
+    }
+    
+    // Абстратный клас от PRODUCT
+    abstract class Goods : Product
+    {
+        //
+        public float ProductWeight 
+        {
+            get { return ProductWeight; }
+            set
+            {
+                if (value >= 0.1f)
+                {
+                    ProductWeight = value;
+                }
+            }
+        }
+        
+        public float ProductHeight 
+        {
+            get { return ProductHeight; }
+            set
+            {
+                if (value >= 0.1f)
+                {
+                    ProductHeight = value;
+                }
+            }
+        }
+
+        public float ProductWidth 
+        {
+            get { return ProductWidth; }
+            set
+            {
+                if (value > 0.1f)
+                {
+                    ProductWidth = value;
+                }
+            }
+        }
+
+        public float ProductDepth 
+        {
+            get { return ProductDepth; }
+            set
+            {
+                if (value > 0.1f)
+                {
+                    ProductDepth = value;
+                }
+            }
+        }
+        
+        //
+        public Goods(string name, string description, string label, double price, string[] storageLocation,
+            float productWeight, float productHeight, float productWidth, float productDepth) :
+            base(name, description, label, price, storageLocation)
+        {
+            ProductWeight = productWeight;
+            ProductHeight = productHeight;
+            ProductWidth = productWidth;
+            ProductDepth = productDepth;
+        }
+    }
+    
+    // два класса не съесного оборудования
+    abstract class FoodGoods : Product
+    {
+        
+    }
+    
+    // Определение классов наследников по аналогии с блоком "ПОЛЬЗОВАТЕЛЬ"
+    // От абстрактного класса GOODS > два класса наследника
+    //      - HouseholdEquipment - должен содержать логику:
+    //      расчёт стоимости товара в зависимости от пользователя, возможно использвать любые способы доставки.
+    //      - OtherEquipment- должен содержать логику:
+    //      расчёт стоимости товара в зависимости от пользователя, возможно использовать только самовывоз (два типа).
+    // От абстрактного класса FOODGOODS > три класса наследника
+    //      - ReadyMakeFood - ограничение на доставку, Иная логика скидки. проверка времени доставки.
+    //      - PerishableProducts- ограничение на доставку, логика скидки уже описана, проверка времени доставки..
+    //      - OtherFood- ограничений на доставку нет.
+
+    //
+    abstract class Delivery
+    {
+        public string ProductNameToDelivery { get; set; }
+        public string CustomerHomeAddress;
+        public string CustomerName { get; set; }
+        public Delivery(string productName, string customerName, string address)
+        {
+            ProductNameToDelivery = productName;
+            CustomerHomeAddress = address;
+            CustomerName = customerName;
+        }
+    }
+
+    class HomeDelivery: Delivery 
+    {
+        
+    }
+
+    class ExpressDelicery : Delivery
+    {
+        
+    }
+
+    class PickPointDelivery: Delivery 
+    {
+
+    }
+
+    class ShopDelivery: Delivery 
+    {
+
+    }
+
+    class Order < TDelivery,
+        TStruct > where TDelivery: Delivery 
+    {
+        public TDelivery Delivery { get; set; }
+
+        public int Number { get; set; }
+
+        public string Description { get; set; }
+
+        public void DisplayAddress() 
+        {
+            Console.WriteLine(Delivery.CustomerHomeAddress);
+        }
+
+        // ... Другие поля
     }
 }
