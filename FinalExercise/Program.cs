@@ -75,7 +75,7 @@ namespace FinalExercise
             }
         }
         private string Surname { get; set; }
-        protected internal string ID { get; set; }
+        protected internal string ID { get; set; }   // Как сделать при помощи generic / новый класс generic поле ID а далее его принять в текущем классе? Или как?
         private string Email { get; set; }
         private string Position { get; set; }
         protected internal string City { get; set; }
@@ -161,7 +161,7 @@ namespace FinalExercise
         public int GenerateDiscountCoupon()
         {
             int Discount = 0;
-            switch (Price)
+            switch (Product.Price)      //  или такой вариант плохая идея?
             {
                 case double price when price >= 10000 && price < 20000:
                     return 3;
@@ -424,7 +424,6 @@ namespace FinalExercise
         {
             Console.WriteLine(Delivery.CustomerHomeAddress);
         }
-
-        // ... Другие поля
+        
     }
 }
